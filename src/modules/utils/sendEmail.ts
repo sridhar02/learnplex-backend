@@ -37,8 +37,9 @@ export async function sendEmail(
   }
 
   let info
+  const isEmailEnabled = process.env.IS_EMAIL_VERIFICATION_ENABLED === 'true'
 
-  if (type === MailType.ConfirmationEmail) {
+  if (type === MailType.ConfirmationEmail && isEmailEnabled) {
     info = await transporter.sendMail({
       from: `"Coderplex " <${process.env.EMAIL_ID}>`,
       to: email,

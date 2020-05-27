@@ -44,6 +44,13 @@ export class User extends BaseEntity {
   @Column('bool', { default: false })
   confirmed: boolean
 
+  @Field(() => Boolean)
+  async disabledOrConfirmed(): Promise<boolean> {
+    const isEmailDisabled =
+      process.env.IS_EMAIL_VERIFICATION_ENABLED === 'false'
+    return isEmailDisabled || this.confirmed
+  }
+
   @Field(() => [UserRole])
   @Column({
     type: 'enum',
