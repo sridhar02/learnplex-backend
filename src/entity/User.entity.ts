@@ -46,8 +46,7 @@ export class User extends BaseEntity {
 
   @Field(() => Boolean)
   async disabledOrConfirmed(): Promise<boolean> {
-    const isEmailDisabled =
-      process.env.IS_EMAIL_VERIFICATION_ENABLED === 'false'
+    const isEmailDisabled = process.env.IS_EMAIL_VERIFICATION_ENABLED !== '1'
     return isEmailDisabled || this.confirmed
   }
 
