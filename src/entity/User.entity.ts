@@ -8,6 +8,8 @@ import {
   BeforeInsert,
   OneToMany,
   Index,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 
 import { UserRole } from './enums/UserRole.enum'
@@ -70,6 +72,14 @@ export class User extends BaseEntity {
   @Field(() => [Progress])
   @OneToMany(() => Progress, (progress) => progress.user)
   progressList: Promise<Progress[]>
+
+  @Field()
+  @CreateDateColumn()
+  createdDate: Date
+
+  @Field()
+  @UpdateDateColumn()
+  updatedDate: Date
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
