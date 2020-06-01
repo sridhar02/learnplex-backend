@@ -10,11 +10,14 @@ import {
   Index,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm'
 
 import { UserRole } from './enums/UserRole.enum'
 import { Resource } from './Resource.entity'
 import { Progress } from './Progress.entity'
+import { Profile } from './Profile.entity'
 
 @ObjectType()
 @Entity('users')
@@ -80,6 +83,15 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedDate: Date
+
+  @Field(() => Profile, { nullable: true })
+  @OneToOne(() => Profile, (profile) => profile.user)
+  @JoinColumn()
+  profile: Promise<Profile>
+
+  @Field(() => Int, { nullable: true })
+  @Column('int', { nullable: true })
+  profileId: number
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

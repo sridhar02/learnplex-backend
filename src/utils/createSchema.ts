@@ -32,6 +32,7 @@ import { PopulateSlugsResolver } from '../modules/resource/PopulateSlugs.resolve
 import { CreateResourceResolverV2 } from '../modules/resolvers/resource/CreateResource.resolver'
 import { SectionsListResolver } from '../modules/resolvers/section/SectionsList.resolver'
 import { SetDepthsResolver } from '../modules/migrations/SetDepths.resolver'
+import { ProfileResolver } from '../modules/resolvers/user/profile/Profile.resolver'
 
 export const createSchema: () => Promise<GraphQLSchema> = () =>
   buildSchema({
@@ -67,6 +68,7 @@ export const createSchema: () => Promise<GraphQLSchema> = () =>
       CreateResourceResolverV2,
       SectionsListResolver,
       SetDepthsResolver,
+      ProfileResolver,
     ],
     authChecker: ({ context: { req } }) => {
       return !!req.userId
