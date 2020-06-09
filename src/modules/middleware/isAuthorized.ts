@@ -11,6 +11,7 @@ import {
 } from '../../utils/auth'
 import { User } from '../../entity/User.entity'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const refreshToken = async (context: MyContext) => {
   let payload: JWTAuthPayload
   try {

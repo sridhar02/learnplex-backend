@@ -38,7 +38,7 @@ const main = async (): Promise<void> => {
     cors({
       maxAge: 86400,
       credentials: true,
-      origin: getOriginEndPoint(),
+      origin: [getOriginEndPoint(), /\.coderplex\.in$/],
     })
   )
 

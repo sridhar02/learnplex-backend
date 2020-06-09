@@ -6,13 +6,15 @@ import { User } from '../../entity/User.entity'
 
 export const hasRole: (roles: UserRole[]) => MiddlewareFn<MyContext> = (
   roles: UserRole[]
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 ) => async ({ context }, next) => {
   let user: User
   try {
-    ;[user] = await User.find({
+    const [findUser] = await User.find({
       where: { id: context.payload!.userId },
       take: 1,
     })
+    user = findUser
   } catch (e) {
     console.error(e)
     throw new Error('not authenticated')
