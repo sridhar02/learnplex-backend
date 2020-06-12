@@ -1,7 +1,9 @@
 import {
   Arg,
   Ctx,
+  Field,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   UseMiddleware,
@@ -12,6 +14,16 @@ import { isAuthorized } from '../middleware/isAuthorized'
 import { MyContext } from '../../types/MyContext'
 import { UserRole } from '../../entity/enums/UserRole.enum'
 import { hasRole } from '../middleware/hasRole'
+import { getConnection } from 'typeorm'
+
+@ObjectType()
+class UsersCount {
+  @Field()
+  createdDate: Date
+
+  @Field({ nullable: true })
+  count: number
+}
 
 @Resolver()
 export class UsersResolver {
@@ -30,6 +42,18 @@ export class UsersResolver {
   @UseMiddleware(isAuthorized, hasRole([UserRole.ADMIN]))
   users(): Promise<User[]> {
     return User.find({ order: { id: 'ASC' } })
+  }
+
+  @Query(() => [UsersCount])
+  @UseMiddleware(isAuthorized, hasRole([UserRole.ADMIN]))
+  async userCountByDate(): Promise<UsersCount[]> {
+    return getConnection()
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .select('DATE(user.createdDate)', 'createdDate')
+      .addSelect('COUNT(user.id)', 'count')
+      .groupBy('DATE(user.createdDate)')
+      .getRawMany()
   }
 
   @Mutation(() => Boolean)
