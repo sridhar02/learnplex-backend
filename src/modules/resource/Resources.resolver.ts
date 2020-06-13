@@ -51,7 +51,7 @@ export class ResourcesResolver {
     if (!user) {
       throw new Error('Invalid username')
     }
-    return Resource.find({ where: { userId: user.id, published: true } })
+    return Resource.find({ where: { userId: user.id } })
   }
 
   @Query(() => [Resource])
