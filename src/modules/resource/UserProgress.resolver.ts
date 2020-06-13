@@ -46,6 +46,17 @@ export class UserProgressResolver {
     return Progress.find({ where: { userId: currentUser.id } })
   }
 
+  @Query(() => [Progress])
+  async userProgressListByUsername(
+    @Arg('username') username: string
+  ): Promise<Progress[]> {
+    const [user] = await User.find({ where: { username }, take: 1 })
+    if (!user) {
+      throw new Error('Invalid User')
+    }
+    return Progress.find({ where: { userId: user.id } })
+  }
+
   @Query(() => Boolean)
   @UseMiddleware(isAuthorized)
   async hasEnrolled(
