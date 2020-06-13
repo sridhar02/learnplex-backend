@@ -21,8 +21,11 @@ class UsersCount {
   @Field()
   createdDate: Date
 
-  @Field({ nullable: true })
+  @Field()
   count: number
+
+  @Field()
+  cumulativeCount: number
 }
 
 @Resolver()
@@ -46,14 +49,21 @@ export class UsersResolver {
 
   @Query(() => [UsersCount])
   @UseMiddleware(isAuthorized, hasRole([UserRole.ADMIN]))
-  async userCountByDate(): Promise<UsersCount[]> {
-    return getConnection()
+  async usersCountByDate(): Promise<UsersCount[]> {
+    const usersCount = await getConnection()
       .getRepository(User)
       .createQueryBuilder('user')
       .select('DATE(user.createdDate)', 'createdDate')
       .addSelect('COUNT(user.id)', 'count')
       .groupBy('DATE(user.createdDate)')
       .getRawMany()
+    usersCount.sort((a, b) => a.createdDate - b.createdDate)
+    let prevSum = 0
+    usersCount.forEach((userCount) => {
+      userCount.cumulativeCount = prevSum + Number(userCount.count)
+      prevSum += Number(userCount.count)
+    })
+    return usersCount
   }
 
   @Mutation(() => Boolean)
