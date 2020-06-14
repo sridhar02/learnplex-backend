@@ -105,7 +105,7 @@ const main = async (): Promise<void> => {
     )
   )
 
-  app.get('/', (_, res) => res.send('Hello World!'))
+  app.get('/', (_, res) => res.send('Hello World!!'))
 
   app.get('/auth/github', passport.authenticate('github'))
 
